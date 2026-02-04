@@ -5,11 +5,7 @@
 <title>VU CS Quiz Challenge</title>
 
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  * { box-sizing: border-box; margin:0; padding:0; }
 
   body {
     font-family: Arial, sans-serif;
@@ -18,11 +14,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 110px; /* space for logo + heading */
     min-height: 100vh;
+    padding-top: 110px; /* space for logo */
   }
 
-  /* Fixed Logo at Top */
+  /* Fixed logo */
   .header {
     position: fixed;
     top: 0;
@@ -42,120 +38,89 @@
     width: auto;
   }
 
-  /* Title under Logo */
+  /* Title */
   .quiz-title {
-    font-size: clamp(24px, 6vw, 38px);
+    font-size: clamp(28px, 7vw, 42px);
     color: #38bdf8;
     text-align: center;
-    margin: 10px 0 20px 0;
+    margin: 10px 0 10px 0;
     line-height: 1.2;
   }
 
-  /* Game Box */
+  /* Fullscreen quiz container */
   .game-box {
-    width: 95%;       /* almost full width on small phones */
-    max-width: 600px; /* cap for bigger screens */
+    width: 100%;
+    height: calc(100vh - 140px); /* fill remaining space under logo+title */
     background: #020617;
-    padding: 18px;
-    border-radius: 14px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
   }
 
-  /* Timer */
+  /* Timer at top */
   .timer {
-    font-size: 22px;
-    margin-bottom: 12px;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 5px;
     color: #38bdf8;
   }
 
-  /* Question Image */
+  /* Question image */
   #questionImage {
     width: 100%;
-    max-height: 50vh; /* taller image for mobile */
+    height: 50%;
     object-fit: contain;
     border-radius: 10px;
-    margin-bottom: 15px;
   }
 
-  /* Options Buttons */
+  /* Options buttons */
   .options {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
 
   .options button {
+    flex: 1;
     width: 100%;
-    padding: 16px;
+    padding: 18px;
+    font-size: 18px;
     border: none;
     border-radius: 12px;
-    font-size: 18px;
     cursor: pointer;
     background: #1e293b;
     color: white;
-    transition: transform 0.1s ease, background 0.2s ease;
+    transition: 0.2s;
   }
 
-  .options button:active {
-    transform: scale(0.97);
-  }
-
-  .options button:hover {
-    background: #334155;
-  }
-
-  .correct {
-    background: #16a34a !important;
-  }
-
-  .wrong {
-    background: #dc2626 !important;
-  }
+  .options button:hover { background: #334155; }
+  .options button:active { transform: scale(0.97); }
+  .correct { background: #16a34a !important; }
+  .wrong { background: #dc2626 !important; }
 
   .score {
-    font-size: 24px;
+    font-size: 26px;
+    text-align: center;
     margin-top: 15px;
   }
 
-  hr {
-    border: none;
-    border-top: 1px solid #1e293b;
-    margin: 20px 0;
+  /* Score screen QR */
+  .score img {
+    width: 180px;
+    margin: 15px auto 0 auto;
+    display: block;
+    border-radius: 10px;
   }
 
-  /* Desktop / Tablet tweaks */
-  @media (min-width: 768px) {
+  /* Responsive tweaks */
+  @media (min-width:768px){
     .game-box {
-      max-width: 500px;
-      padding: 22px;
-    }
-
-    .timer {
-      font-size: 24px;
-    }
-
-    .options button {
-      font-size: 20px;
-      padding: 18px;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .game-box {
+      height: auto;
       max-width: 600px;
     }
-  }
-
-  /* Mobile small screens tweaks */
-  @media (max-width: 380px) {
-    .options button {
-      font-size: 16px;
-      padding: 12px;
-    }
-
-    .timer {
-      font-size: 20px;
-    }
+    #questionImage { height: 300px; }
+    .options button { font-size: 20px; padding: 20px; }
   }
 
 </style>
@@ -163,15 +128,12 @@
 
 <body>
 
-  <!-- Logo -->
   <div class="header">
     <img src="logo.png" alt="VU CS Logo">
   </div>
 
-  <!-- Quiz Title -->
   <h1 class="quiz-title">🧠 VU CS Quiz Challenge</h1>
 
-  <!-- Game Box -->
   <div class="game-box">
     <div class="timer">⏱️ Time: <span id="time">15</span>s</div>
     <img id="questionImage">
@@ -180,31 +142,11 @@
 
 <script>
 const questions = [
-  {
-    image: "q1.png",
-    options: ["Environment Mismatch", "Version Control Conflict", "Runtime Exception", "Code Optimization"],
-    answer: "Environment Mismatch"
-  },
-  {
-    image: "q2.png",
-    options: ["Recursive Function", "Event Loop", "Infinite Loop", "Deadlock"],
-    answer: "Infinite Loop"
-  },
-  {
-    image: "q3.png",
-    options: ["Agile Methodology", "Software Development Life Cycle", "Triple Constraint Model", "Project Management Triangle"],
-    answer: "Project Management Triangle"
-  },
-  {
-    image: "q4.png",
-    options: ["Data Encryption", "Weak Password", "Brute Force Attack", "Two-Factor Authentication"],
-    answer: "Weak Password"
-  },
-  {
-    image: "q5.png",
-    options: ["Cloud Storage", "Big Data", "Machine Learning", "Information Overload"],
-    answer: "Information Overload"
-  }
+  { image: "q1.png", options: ["Environment Mismatch","Version Control Conflict","Runtime Exception","Code Optimization"], answer:"Environment Mismatch" },
+  { image: "q2.png", options: ["Recursive Function","Event Loop","Infinite Loop","Deadlock"], answer:"Infinite Loop" },
+  { image: "q3.png", options: ["Agile Methodology","Software Development Life Cycle","Triple Constraint Model","Project Management Triangle"], answer:"Project Management Triangle" },
+  { image: "q4.png", options: ["Data Encryption","Weak Password","Brute Force Attack","Two-Factor Authentication"], answer:"Weak Password" },
+  { image: "q5.png", options: ["Cloud Storage","Big Data","Machine Learning","Information Overload"], answer:"Information Overload" }
 ];
 
 let currentQuestion = 0;
@@ -217,10 +159,7 @@ const optionsDiv = document.getElementById("options");
 const timeSpan = document.getElementById("time");
 
 function loadQuestion() {
-  if (currentQuestion >= questions.length) {
-    showScore();
-    return;
-  }
+  if(currentQuestion >= questions.length){ showScore(); return; }
 
   timeLeft = 15;
   timeSpan.innerText = timeLeft;
@@ -232,7 +171,7 @@ function loadQuestion() {
   q.options.forEach(option => {
     const btn = document.createElement("button");
     btn.innerText = option;
-    btn.onclick = () => selectAnswer(btn, option);
+    btn.onclick = ()=> selectAnswer(btn, option);
     optionsDiv.appendChild(btn);
   });
 
@@ -242,59 +181,39 @@ function loadQuestion() {
 function countdown() {
   timeLeft--;
   timeSpan.innerText = timeLeft;
-
-  if (timeLeft === 0) {
+  if(timeLeft===0){
     clearInterval(timer);
     currentQuestion++;
     setTimeout(loadQuestion, 500);
   }
 }
 
-function selectAnswer(button, option) {
+function selectAnswer(button, option){
   clearInterval(timer);
   const correct = questions[currentQuestion].answer;
-
-  if (option === correct) {
-    button.classList.add("correct");
-    score++;
-  } else {
-    button.classList.add("wrong");
-  }
-
-  setTimeout(() => {
-    currentQuestion++;
-    loadQuestion();
-  }, 800);
+  if(option===correct){ button.classList.add("correct"); score++; }
+  else{ button.classList.add("wrong"); }
+  setTimeout(()=>{ currentQuestion++; loadQuestion(); }, 800);
 }
 
-function showScore() {
-  const merchCount = Math.ceil(score / 2);
-
+function showScore(){
+  const merchCount = Math.ceil(score/2);
   document.querySelector(".game-box").innerHTML = `
     <div class="score">🎉 Final Score</div>
     <div class="score">${score} / ${questions.length}</div>
-
     <p style="margin-top: 15px; font-size: 16px;">
       🎁 <strong>Congrats!</strong> You can grab 
       <strong>${merchCount}</strong> merch from the table.
     </p>
-
     <hr>
-
     <p style="font-size: 16px;">
       🤝 <strong>Wanna join VU CS?</strong><br>
       Just scan this and become a member for <strong>free</strong> 👇
     </p>
-
-    <img 
-      src="qr.png" 
-      alt="Join VU CS QR Code" 
-      style="width: 160px; margin-top: 10px; border-radius: 10px;"
-    >
+    <img src="qr.png" alt="Join VU CS QR Code">
   `;
 }
 
-// Start quiz
 loadQuestion();
 </script>
 
