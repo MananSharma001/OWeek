@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kahoot Style Image Quiz</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+  }
+
+  .game-box {
+    width: 100%;
+    max-width: 420px;
+    background: #020617;
+    padding: 16px;
+    border-radius: 14px;
+    text-align: center;
+  }
+
+  .timer {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #38bdf8;
+  }
+
+  img {
+    width: 100%;
+    max-height: 40vh;
+    object-fit: contain;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .options button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #1e293b;
+    color: white;
+    transition: transform 0.1s ease, background 0.2s ease;
+  }
+
+  .options button:active {
+    transform: scale(0.97);
+  }
+
+  .options button:hover {
+    background: #334155;
+  }
+
+  .correct {
+    background: #16a34a !important;
+  }
+
+  .wrong {
+    background: #dc2626 !important;
+  }
+
+  .score {
+    font-size: 22px;
+    margin-top: 10px;
+  }
+
+  /* 💻 Desktop improvements */
+  @media (min-width: 768px) {
+    .game-box {
+      max-width: 500px;
+      padding: 22px;
+    }
+
+    .timer {
+      font-size: 20px;
+    }
+
+    .options button {
+      font-size: 17px;
+      padding: 16px;
+    }
+  }
+  .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;              /* increased */
+  background: #020617;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.45);
+}
+
+.header img {
+  height: 58px;              /* bigger logo */
+  width: auto;
+}
+
+/* Push game down so logo doesn’t overlap */
+body {
+  padding-top: 90px;
+}
+
+/* Mobile tuning */
+@media (max-width: 480px) {
+  .header {
+    height: 70px;
+  }
+
+  .header img {
+    height: 50px;
+  }
+
+  body {
+    padding-top: 80px;
+  }
+}
+
+</style>
+
+</head>
+
+<body>
+    <div class="header">
+  <img src="logo.png" alt="VU CS Logo">
+</div>
+
+
+<div class="game-box">
+  <div class="timer">⏱️ Time: <span id="time">10</span>s</div>
+  <img id="questionImage">
+  <div class="options" id="options"></div>
+</div>
+
+<script>
+const questions = [
+  {
+    image: "q1.png",
+    options: ["Environment Mismatch", "Version Control Conflict", "Runtime Exception", "Code Optimization"],
+    answer: "Environment Mismatch"
+  },
+  {
+    image: "q2.png",
+    options: ["Recursive Function", "Event Loop", "Infinite Loop", "Deadlock"],
+    answer: "Infinite Loop"
+  },
+  {
+    image: "q3.png",
+    options: ["Agile Methodology", "Software Development Life Cycle", "Triple Constraint Model", "Project Management Triangle"],
+    answer: "Project Management Triangle"
+  },
+  {
+    image: "q4.png",
+    options: ["Data Encryption", "Weak Password", "Brute Force Attack", "Two-Factor Authentication"],
+    answer: "Weak Password"
+  },
+  {
+    image: "q5.png",
+    options: ["Cloud Storage", "Big Data", "Machine Learning", "Information Overload"],
+    answer: "Information Overload"
+  },
+];
+
+let currentQuestion = 0;
+let score = 0;
+let timeLeft = 15;
+let timer;
+
+const img = document.getElementById("questionImage");
+const optionsDiv = document.getElementById("options");
+const timeSpan = document.getElementById("time");
+
+function loadQuestion() {
+  if (currentQuestion >= questions.length) {
+    showScore();
+    return;
+  }
+
+  timeLeft = 15;
+  timeSpan.innerText = timeLeft;
+
+  const q = questions[currentQuestion];
+  img.src = q.image;
+  optionsDiv.innerHTML = "";
+
+  q.options.forEach(option => {
+    const btn = document.createElement("button");
+    btn.innerText = option;
+    btn.onclick = () => selectAnswer(btn, option);
+    optionsDiv.appendChild(btn);
+  });
+
+  timer = setInterval(countdown, 1000);
+}
+
+function countdown() {
+  timeLeft--;
+  timeSpan.innerText = timeLeft;
+
+  if (timeLeft === 0) {
+    clearInterval(timer);
+    currentQuestion++;
+    setTimeout(loadQuestion, 500);
+  }
+}
+
+function selectAnswer(button, option) {
+  clearInterval(timer);
+
+  const correct = questions[currentQuestion].answer;
+
+  if (option === correct) {
+    button.classList.add("correct");
+    score++;
+  } else {
+    button.classList.add("wrong");
+  }
+
+  setTimeout(() => {
+    currentQuestion++;
+    loadQuestion();
+  }, 800);
+}
+
+function showScore() {
+  const merchCount = Math.ceil(score / 2);
+
+  document.querySelector(".game-box").innerHTML = `
+    <div class="score">🎉 Final Score</div>
+    <div class="score">${score} / ${questions.length}</div>
+
+    <p style="margin-top: 15px; font-size: 16px;">
+      🎁 <strong>Congrats!</strong> You can grab 
+      <strong>${merchCount}</strong> merch from the table.
+    </p>
+
+    <hr style="margin: 20px 0; border-color: #1e293b;">
+
+    <p style="font-size: 16px;">
+      🤝 <strong>Wanna join VU CS?</strong><br>
+      Just scan this and become a member for <strong>free</strong> 👇
+    </p>
+
+    <img 
+      src="qr.png" 
+      alt="Join VU CS QR Code" 
+      style="width: 160px; margin-top: 10px; border-radius: 10px;"
+    >
+  `;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
