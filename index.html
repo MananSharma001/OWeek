@@ -127,35 +127,35 @@
   /* Desktop / Tablet tweaks */
   @media (min-width: 768px) {
     .game-box {
-      max-width: 500px;
-      padding: 22px;
+      max-width: 600px;
+      padding: 28px;
     }
 
     .timer {
-      font-size: 24px;
+      font-size: 28px;
     }
 
     .options button {
-      font-size: 20px;
-      padding: 18px;
+      font-size: 22px;
+      padding: 22px;
     }
   }
 
   @media (min-width: 1024px) {
     .game-box {
-      max-width: 600px;
+      max-width: 700px;
     }
   }
 
   /* Mobile small screens tweaks */
   @media (max-width: 380px) {
     .options button {
-      font-size: 18px;
-      padding: 16px;
+      font-size: 20px;
+      padding: 20px;
     }
 
     .timer {
-      font-size: 24px;
+      font-size: 28px;
     }
   }
 
@@ -269,15 +269,30 @@ function selectAnswer(button, option) {
 }
 
 function showScore() {
-  const merchCount = Math.ceil(score / 2);
+  let merchCount;
+  let message;
+
+  if (score === 0) {
+    merchCount = 2;
+    message = "Nice attempt! You can pick";
+  } else if (score === 1) {
+    merchCount = 1;
+    message = "Congrats! You can grab";
+  } else if (score === 2) {
+    merchCount = 2;
+    message = "Congrats! You can grab";
+  } else if (score === 3 || score === 4 || score === 5) {
+    merchCount = 3;
+    message = "Congrats! You can grab";
+  }
 
   document.querySelector(".game-box").innerHTML = `
     <div class="score">🎉 Final Score</div>
     <div class="score">${score} / ${questions.length}</div>
 
     <p style="margin-top: 15px; font-size: 18px;">
-      🎁 <strong>Congrats!</strong> You can grab 
-      <strong>${merchCount}</strong> merch from the table.
+      🎁 <strong>${message}</strong> 
+      <strong>${merchCount}</strong> merchandise from the table.
     </p>
 
     <hr>
